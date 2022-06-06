@@ -61,4 +61,14 @@ public class BookService implements IBookService {
     public List<Book> sortingBookInDesc() {
         return bookRepository.sortingInDesc();
     }
-}
+
+    @Override
+    public List<Book> getBookByAuthorName(String authorName) {
+        List<Book> findBook = bookRepository.findBookByAuthorName(authorName);
+        if (findBook.isEmpty()) {
+            throw new BookStoreCustomException(" Details for provided Book is not found");
+        }
+        return findBook;
+    }
+    }
+

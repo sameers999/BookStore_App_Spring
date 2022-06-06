@@ -10,8 +10,9 @@ public @Data class UserLoginDTO {
     private String email;
     @NotEmpty(message = "Password cant be null")
     private String password;
-    public UserLoginDTO(String email,String password){
-        this.email=email;
-        this.password=password;
+
+    public UserLoginDTO(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 }

@@ -8,15 +8,23 @@ import com.springbookstore_app.springbookstore_app.model.UserRegistration;
 import java.util.List;
 
 public interface IUserService {
-    UserRegistration createUser(UserDTO userDTO);
+    String addUser(UserDTO userDTO);
 
     List<UserRegistration> getAllUsers();
 
-    UserRegistration getById(int id);
-
     ResponseDTO loginUser(UserLoginDTO userLoginDTO);
 
-    List<UserRegistration> getByEmailId(String email_id);
+    Object getUserByToken(String token);
+    // String getToken(String email);
 
-    UserRegistration updateUserBookStoreData(int id, UserDTO userDTO);
+    String forgotPassword(String email, String password);
+
+    Object getUserByEmailId(String emailId);
+
+    UserRegistration updateUser(String email, UserDTO userDTO);
+
+    List<UserRegistration> getAllUserDataByToken(String token);
+
+    UserRegistration updateRecordById(Integer id, UserDTO userDTO);
+
 }

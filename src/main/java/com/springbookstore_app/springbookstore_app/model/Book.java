@@ -21,9 +21,9 @@ public @Data class Book {
 
     private String bookImg;
 
-    private String price;
+    private Integer price;
 
-    private String quantity;
+    private Integer quantity;
 
     public Book() {
 
@@ -40,6 +40,5 @@ public @Data class Book {
         this.bookImg = bookDTO.getBookImg();
         this.price = bookDTO.getPrice();
         this.quantity = bookDTO.getQuantity();
-
     }
 }
