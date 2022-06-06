@@ -17,7 +17,7 @@ public class EmailSenderService {
     public void sendEmail(String toEmail, String subject, String body ) {
         //    Ability to add or write Email(toEmail,subject, body of the mail)
         SimpleMailMessage message=new SimpleMailMessage();
-        message.setFrom("akshaysportive@gmail.com");
+        message.setFrom("syedmahammadsameer999@gmail.com");
         message.setTo(toEmail);
         message.setText(body);
         message.setSubject(subject);
