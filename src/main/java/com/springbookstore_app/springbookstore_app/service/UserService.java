@@ -1,7 +1,7 @@
 package com.springbookstore_app.springbookstore_app.service;
 
 import com.springbookstore_app.springbookstore_app.Util.EmailSenderService;
-import com.springbookstore_app.springbookstore_app.Util.TokenUtil;
+import com.springbookstore_app.springbookstore_app.Util.TokenUtility;
 import com.springbookstore_app.springbookstore_app.dto.ResponseDTO;
 import com.springbookstore_app.springbookstore_app.dto.UserDTO;
 import com.springbookstore_app.springbookstore_app.dto.UserLoginDTO;
@@ -18,6 +18,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserService implements IUserService {
+
     @Autowired
     private UserRegistrationRepository userRepository;
 
@@ -25,7 +26,7 @@ public class UserService implements IUserService {
     EmailSenderService mailService;
 
     @Autowired
-    TokenUtil util;
+    TokenUtility util;
 
     @Override
     public String addUser(UserDTO userDTO) {
@@ -34,8 +35,19 @@ public class UserService implements IUserService {
         String token = util.createToken(newUser.getUserId());
         mailService.sendEmail(newUser.getEmail(), "Test Email", "Registered SuccessFully, hii: "
                 + newUser.getFirstName() + "Please Click here to get data-> "
-                + "http://localhost:8087/user/get/" + token);
+                + "http://localhost:8087/user/verify/" + token);
         return token;
+    }
+
+    @Override
+    public String verifyUser(String token) {
+        int id = Math.toIntExact(util.decodeToken(token));
+        Optional<UserRegistration> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            return user.toString();
+        } else
+            return null;
     }
 
     @Override
@@ -49,9 +61,9 @@ public class UserService implements IUserService {
         int id = util.decodeToken(token);
         Optional<UserRegistration> getUser = userRepository.findById(id);
         if (getUser.isPresent()) {
-            mailService.sendEmail("syedmahammadSameer999@gmail.com", "Test Email", "Get your data with this token, hii: "
+            mailService.sendEmail("syedmahammadsameer999@gmail.com", "Test Email", "Get your data with this token, hii: "
                     + getUser.get().getEmail() + "Please Click here to get data-> "
-                    + "http://localhost:8087/user/get/" + token);
+                    + "http://localhost:8087/user/getAll/" + token);
             return getUser;
 
         } else {
@@ -79,34 +91,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String forgotPassword(String email, String password) {
-        Optional<UserRegistration> isUserPresent = userRepository.findByEmailid(email);
-
-        if (!isUserPresent.isPresent()) {
-            throw new BookStoreCustomException("Book record does not found");
-        } else {
-            UserRegistration user = isUserPresent.get();
-            user.setPassword(password);
-            userRepository.save(user);
-            return "Password updated successfully";
-        }
-
-    }
-
-    @Override
-    public Object getUserByEmailId(String emailId) {
-
-        return userRepository.findByEmailid(emailId);
-    }
-
-    @Override
     public UserRegistration updateUser(String id, UserDTO userDTO) {
         Optional<UserRegistration> updateUser = userRepository.findByEmailid(id);
         if (updateUser.isPresent()) {
             UserRegistration newBook = new UserRegistration(updateUser.get().getUserId(), userDTO);
             userRepository.save(newBook);
             String token = util.createToken(newBook.getUserId());
-            mailService.sendEmail(newBook.getEmail(), "Welcome " + newBook.getFirstName(), "Click here \n http://localhost:8087/user/get/" + token);
+            mailService.sendEmail(newBook.getEmail(), "Welcome " + newBook.getFirstName(), "Click here \n http://localhost:8087/user/update/" + token);
             return newBook;
 
         }
@@ -119,9 +110,9 @@ public class UserService implements IUserService {
         Optional<UserRegistration> isContactPresent = userRepository.findById(id);
         if (isContactPresent.isPresent()) {
             List<UserRegistration> listOfUsers = userRepository.findAll();
-            mailService.sendEmail("syedmahammadSameer999@gmail.com", "Test Email", "Get your data with this token, hii: "
+            mailService.sendEmail("syedmahammadsameer999@gmail.com", "Test Email", "Get your data with this token, hii: "
                     + isContactPresent.get().getEmail() + "Please Click here to get data-> "
-                    + "http://localhost:8087/user/get/" + token);
+                    + "http://localhost:8087/user/getAll/" + token);
             return listOfUsers;
         } else {
             System.out.println("Exception ...Token not found!");

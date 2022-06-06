@@ -6,13 +6,12 @@ import com.springbookstore_app.springbookstore_app.model.Order;
 import java.util.List;
 
 public interface IOrderService {
-    Order insertOrder(OrderDTO orderdto);
+    String insertOrder(OrderDTO orderdto);
 
-    List<Order> getAllOrderRecords();
+    List<Order> getOrderRecord(String token);
 
-    Order getOrderRecord(Integer id);
+    List<Order> getAllOrderRecords(String token);
 
-    Order updateOrderRecord(Integer id, OrderDTO dto);
 
-    Order deleteOrderRecord(Integer id);
+    Order cancelOrder(String token, int userId);
 }

@@ -6,12 +6,16 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+
 @Service
 public class EmailSenderService {
+    // Ability to send mails
     @Autowired
     private JavaMailSender mailSender;
 
     public void sendEmail(String toEmail, String subject, String body ) {
+        //    Ability to add or write Email(toEmail,subject, body of the mail)
         SimpleMailMessage message=new SimpleMailMessage();
         message.setFrom("akshaysportive@gmail.com");
         message.setTo(toEmail);

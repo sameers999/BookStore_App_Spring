@@ -18,6 +18,8 @@ import java.util.List;
 public class UserRegistrationController {
     @Autowired
     IUserService userRegistrationService;
+
+    //  Ability to Create account
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
         String newUser = userRegistrationService.addUser(userDTO);
@@ -25,11 +27,13 @@ public class UserRegistrationController {
         return new ResponseEntity(responseDTO, HttpStatus.CREATED);
     }
 
+    //    Ability to login
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> userLogin(@RequestBody UserLoginDTO userLoginDTO) {
         return new ResponseEntity<ResponseDTO>(userRegistrationService.loginUser(userLoginDTO), HttpStatus.OK);
     }
 
+    //    Ability to getAll Login
     @GetMapping(value = "/getAll")
     public ResponseEntity<String> getAllUser() {
         List<UserRegistration> listOfUsers = userRegistrationService.getAllUsers();
@@ -37,24 +41,31 @@ public class UserRegistrationController {
         return new ResponseEntity(dto, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get/{token}")
+    //    Ability to getAll by token
+    @GetMapping(value = "/getAll/{token}")
     public ResponseEntity<ResponseDTO> getAllUserDataByToken(@PathVariable String token) {
         List<UserRegistration> listOfUser = userRegistrationService.getAllUserDataByToken(token);
         ResponseDTO dto = new ResponseDTO("Data retrieved successfully (:", listOfUser);
         return new ResponseEntity(dto, HttpStatus.OK);
     }
 
-    @PostMapping("/forgotPassword")
-    public ResponseEntity<String> forgotPassword(@RequestParam String email, @RequestParam String password) {
-        String resp = userRegistrationService.forgotPassword(email, password);
-        return new ResponseEntity(resp, HttpStatus.OK);
-    }
-
+    //    Ability to Update by id
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateRecordById(@PathVariable Integer id, @Valid @RequestBody UserDTO userDTO) {
         UserRegistration entity = userRegistrationService.updateRecordById(id, userDTO);
         ResponseDTO dto = new ResponseDTO("User Record updated successfully", entity);
         return new ResponseEntity(dto, HttpStatus.ACCEPTED);
     }
-
+    // Ability to verify by token
+    @GetMapping("/verify/{token}")
+    ResponseEntity<ResponseDTO> verifyUser(@Valid @PathVariable String token) {
+        String userVerification = userRegistrationService.verifyUser(token);
+        if (userVerification != null) {
+            ResponseDTO responseDTO = new ResponseDTO("User verified :", userVerification);
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO("User Not verified data:", userVerification);
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        }
+    }
 }
